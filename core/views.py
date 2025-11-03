@@ -2,6 +2,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post
+from .forms import PostForm
 
 # READ (List)
 def post_list(request):
@@ -17,27 +18,28 @@ def post_detail(request, pk):
 # CREATE
 def post_create(request):
     if request.method == "POST":
-        # Pega os dados direto do formulário, sem validação
-        title = request.POST['title']
-        content = request.POST['content']
-        Post.objects.create(title=title, content=content)
-        return redirect('post_list')
-    
-    # Se for um GET, apenas mostra o formulário vazio
-    return render(request, 'core/post_form.html')
+        form = PostForm(request.POST) 
+        if form.is_valid():
+            form.save()
+            return redirect('post_list')
+    else:
+        form = PostForm() 
+
+    return render(request, 'core/post_form.html', {'form': form})
 
 # UPDATE
 def post_update(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    
+
     if request.method == "POST":
-        post.title = request.POST['title']
-        post.content = request.POST['content']
-        post.save()
-        return redirect('post_detail', pk=post.pk)
-    
-    # Se for um GET, mostra o formulário preenchido com dados do post
-    return render(request, 'core/post_form.html', {'post': post})
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = PostForm(instance=post) 
+
+    return render(request, 'core/post_form.html', {'form': form, 'post': post})
 
 # DELETE
 def post_delete(request, pk):
