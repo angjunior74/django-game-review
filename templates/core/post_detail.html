@@ -3,36 +3,19 @@
 {% block content %}
     <h2>{{ post.title }}</h2>
     <small>Postado em: {{ post.created_at|date:"d/m/Y" }}</small>
+
+    <div>
+        <strong>Gêneros:</strong>
+        {% for category in post.categories.all %}
+            <a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Nenhum gênero.
+        {% endfor %}
+    </div>
+
     <hr>
     <div>
         {{ post.content|safe }}
     </div>
-    <hr>
-    <a href="{% url 'post_update' post.pk %}">Editar Avaliação</a>
-    <a href="{% url 'post_delete' post.pk %}">Deletar Avaliação</a>
 
-    <hr>
-
-    <h3>Comentários</h3>
-
-    {% if user.is_authenticated %}
-        <form action="{% url 'add_comment' post.pk %}" method="POST">
-            {% csrf_token %}
-            {{ form.as_p }} <button type="submit">Enviar Comentário</button>
-        </form>
-    {% else %}
-        <p>Você precisa estar <a href="{% url 'admin:login' %}">logado</a> para comentar.</p>
-    {% endif %}
-
-    <br>
-
-    {% for comment in post.comments.all|dictsortreversed:"created_at" %}
-        <article>
-            <strong>{{ comment.author.username }}</strong>
-            <small>em {{ comment.created_at|date:"d/m/Y H:i" }}</Nsmall>
-            <p>{{ comment.text|linebreaks }}</p>
-        </article>
-    {% empty %}
-        <p>Ainda não há comentários. Seja o primeiro!</p>
-    {% endfor %}
     {% endblock %}

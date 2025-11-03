@@ -3,7 +3,7 @@
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from .models import Post
+from .models import Post, Comment, Category
 from .forms import PostForm, CommentForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -57,3 +57,19 @@ def add_comment(request, pk):
             return redirect('post_detail', pk=post.pk)
     else:
         return redirect('post_detail', pk=post.pk)
+    
+    
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'core/category_list.html'
+    context_object_name = 'categories'
+
+class CategoryDetailView(DetailView):
+    model = Category
+    template_name = 'core/category_detail.html'
+    context_object_name = 'category'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = self.object.posts.all().order_by('-created_at')
+        return context

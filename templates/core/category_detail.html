@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Gênero: {{ category.name }}</h2>
+    <p>{{ category.description }}</p>
+
+    <hr>
+
+    <h3>Avaliações neste Gênero:</h3>
+
+    {% for post in posts %}
+        <article>
+            <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+            <p>Postado em: {{ post.created_at|date:"d/m/Y" }}</p>
+        </article>
+    {% empty %}
+        <p>Nenhuma avaliação encontrada neste gênero.</p>
+    {% endfor %}
+{% endblock %}
