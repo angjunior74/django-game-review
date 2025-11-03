@@ -1,54 +1,38 @@
 # Arquivo: core/views.py
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from .models import Post
 from .forms import PostForm
 
-# READ (List)
-def post_list(request):
-    posts = Post.objects.all().order_by('-created_at') # Ordena pela data
-    return render(request, 'core/post_list.html', {'object_list': posts})
+# View para READ (List)
+class PostListView(ListView):
+    model = Post
+    template_name = 'core/post_list.html'
+    ordering = ['-created_at'] 
 
-# READ (Detail)
-def post_detail(request, pk):
-    # Responde 404 caso o post não exista
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'core/post_detail.html', {'post': post})
+# View para READ (Detail)
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'core/post_detail.html'
 
-# CREATE
-def post_create(request):
-    if request.method == "POST":
-        form = PostForm(request.POST) 
-        if form.is_valid():
-            form.save()
-            return redirect('post_list')
-    else:
-        form = PostForm() 
+# View para CREATE
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm 
+    template_name = 'core/post_form.html'
+    success_url = reverse_lazy('post_list')
 
-    return render(request, 'core/post_form.html', {'form': form})
+# View para UPDATE
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'core/post_form.html'
+    success_url = reverse_lazy('post_list') 
 
-# UPDATE
-def post_update(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('post_detail', pk=post.pk)
-    else:
-        form = PostForm(instance=post) 
-
-    return render(request, 'core/post_form.html', {'form': form, 'post': post})
-
-# DELETE
-def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    
-    if request.method == "POST":
-        # Se o formulário de confirmação for enviado
-        post.delete()
-        return redirect('post_list')
-    
-    # Se for um GET, apenas mostra a página de confirmação
-    return render(request, 'core/post_confirm_delete.html', {'post': post})
+# View para DELETE
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'core/post_confirm_delete.html' 
+    success_url = reverse_lazy('post_list')
