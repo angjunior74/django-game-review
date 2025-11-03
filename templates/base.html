@@ -1,19 +1,46 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+{% load static %} <html lang="pt-br">
 <head>
     <title>Meu Blog de Jogos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
-        <h1><a href="{% url 'post_list' %}">Blog de Avaliação de Jogos</a></h1>
-        <nav>
+    <h1><a href="{% url 'post_list' %}">Blog de Avaliação de Jogos</a></h1>
+<nav>
     <a href="{% url 'post_list' %}">Home</a>
-    <a href="{% url 'category_list' %}">Gêneros</a> 
+    <a href="{% url 'category_list' %}">Gêneros</a>
+
+    {% if user.is_authenticated %}
+        <span style="color: white; font-weight: bold; padding: 0 1rem;">
+            Olá, {{ user.username }}!
+        </span>
+
+        <form action="{% url 'logout' %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type"submit" style="background: none; 
+                                       border: none; 
+                                       color: white; 
+                                       font-weight: bold; 
+                                       padding: 0 1rem; 
+                                       cursor: pointer; 
+                                       font-family: inherit; 
+                                       font-size: inherit;
+                                       text-decoration: none;">
+                Logout
+            </button>
+        </form>
+
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
 </nav>
-    </header>
+</header>
     <main>
+<div class="container">
         {% block content %}
         {% endblock %}
+    </div>
     </main>
 </body>
 </html>

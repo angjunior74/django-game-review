@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Login</h2>
+  <p>Por favor, faça login para comentar.</p>
+
+  {% if form.errors %}
+    <p style="color: red;">Seu usuário ou senha estão incorretos. Tente novamente.</p>
+  {% endif %}
+
+  <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+  </form>
+{% endblock %}
