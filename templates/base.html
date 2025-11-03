@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Meu Blog de Jogos</title>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'post_list' %}">Blog de Avaliação de Jogos</a></h1>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Deletar Avaliação</h2>
+    <p>Você tem certeza que quer deletar a avaliação: "{{ post.title }}"?</p>
+
+    <form method="POST">
+        {% csrf_token %} <button type="submit">Confirmar Deleção</button>
+        <a href="{% url 'post_detail' post.pk %}">Cancelar</a>
+    </form>
+{% endblock %}

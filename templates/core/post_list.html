@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Todas as Avaliações</h2>
+    <a href="{% url 'post_create' %}">Adicionar Nova Avaliação</a>
+    <hr>
+    {% for post in object_list %} <article>
+            <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+            <p>Postado em: {{ post.created_at|date:"d/m/Y" }}</p>
+        </article>
+    {% empty %}
+        <p>Nenhuma avaliação encontrada.</p>
+    {% endfor %}
+{% endblock %}

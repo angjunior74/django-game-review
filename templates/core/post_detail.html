@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ post.title }}</h2>
+    <small>Postado em: {{ post.created_at|date:"d/m/Y" }}</small>
+    <hr>
+    <div>
+        {{ post.content|safe }} </div>
+    <hr>
+    <a href="{% url 'post_update' post.pk %}">Editar Avaliação</a>
+    <a href="{% url 'post_delete' post.pk %}">Deletar Avaliação</a>
+{% endblock %}

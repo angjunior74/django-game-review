@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if post %}
+        <h2>Editar Avaliação: {{ post.title }}</h2>
+    {% else %}
+        <h2>Criar Nova Avaliação</h2>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %} <p>
+            <label>Título do Jogo:</label><br>
+            <input type="text" name="title" value="{{ post.title }}">
+        </p>
+        <p>
+            <label>Avaliação (pode usar HTML):</label><br>
+            <textarea name="content" rows="10" cols="50">{{ post.content }}</textarea>
+        </p>
+        <button type="submit">Salvar</button>
+    </form>
+{% endblock %}
